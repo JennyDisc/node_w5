@@ -18,7 +18,7 @@ router.delete('/', function (req, res, next) {
   PostController.deleteAllPosts(req, res, next);
 });
 
-router.delete('/:id', function (req, res, next) {
+router.delete('/:id', function handleErrorAsync(req, res, next) {
   PostController.deletePosts(req, res, next);
 });
 

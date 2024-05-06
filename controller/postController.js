@@ -23,7 +23,9 @@ const postController = {
         const postCanDo = await User.findById(data.user, 'name length').exec();
         // 輸入非 users collection 的 ID 時回傳 null (無法執行新增)
         if (postCanDo !== null) {
-            if (data.content.trim() !== undefined) {
+            if (data.content !== undefined || data.content.trim() !== "")
+            // if (data.content.trim() !== undefined)
+            {
                 const newPost = await Post.create(
                     {
                         user: data.user,
@@ -38,7 +40,7 @@ const postController = {
                 successHandle(res, newPost, null);
             } else {
                 // 用 appError 自訂錯誤回饋
-                next(appError(500, "content 欄位未確實填寫，或無該筆貼文 id"));
+                next(appError(500, 'content 欄位未確實填寫，或無該筆貼文 id'));
             }
         } else {
             next(appError(400, '查無此用戶 id'));
@@ -62,7 +64,7 @@ const postController = {
             successHandle(res, null, null);
 
         } else {
-            next(appError(400, "查無該筆貼文 id"));
+            next(appError(400, '查無該筆貼文 id'));
         };
     },
     async patchPosts(req, res, next) {
@@ -72,7 +74,7 @@ const postController = {
         const idResult = await Post.findById(id);
         // 找到這筆 id 會回傳那筆的物件內容。找不到則回傳 null
         // console.log(idResult);
-        if (data.content.trim() !== undefined && idResult !== null) {
+        if (data.content.trim() !== undefined && idResult !== null && data.content.trim() !== "") {
             // 寫法1
             // await Post.findByIdAndUpdate(
             //     id,

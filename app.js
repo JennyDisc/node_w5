@@ -60,6 +60,7 @@ const resErrorDev = (err, res) => {
     errorHandle(res, err.statusCode, err, err.message, err.stack);
 };
 
+// 處理錯誤(如程式撰寫錯誤、try catch 的 catch 錯誤)
 app.use(function (err, req, res, next) {
     err.statusCode = err.statusCode || 500;
     // 開發環境 development
@@ -81,7 +82,7 @@ app.use(function (err, req, res, next) {
         return resErrorProd(err, res)
     }
     // SyntaxError 資料格式錯誤
-    // POST 與 PATCH API，body 寫 "content": 、
+    // POST 與 PATCH API，body 寫 "content": 
     else if (err.name === 'SyntaxError') {
         err.message = "資料格式錯誤";
         err.isOperational = true;
@@ -90,15 +91,10 @@ app.use(function (err, req, res, next) {
     resErrorProd(err, res)
 });
 
-// 處理錯誤(如程式撰寫錯誤、try catch 的 catch 錯誤)
-app.use(function (err, req, res, next) {
-    errorHandle(res, 500, 'error', '程式有些問題，請稍後嘗試', null);
-});
-
 // node.js 提供的"預期外的錯誤"
 // 如沒有加上 catch 捕捉，錯誤就會觸發、
-// POST API，body 直接不寫 content 或 "content":" " 只寫雙引號。或是 PATCH  API 直接不寫 content 、
-// "刪除單筆"、"修改"的 id 數字長度不符合
+// POST 與 PATCH API，body 直接不寫 content、
+// "刪除單筆"、"修改"路徑的 id 數字長度不符規定
 process.on('unhandledRejection', (err, promise) => {
     console.error('未捕捉到的 rejection：', promise, '原因：', err);
 });
