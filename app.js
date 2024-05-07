@@ -7,7 +7,8 @@ const errorHandle = require("./service/errorHandle");
 require('./connections/index');
 
 // node.js 提供的"預期外的錯誤"
-// 如 axios 沒有寫 catch 時會由這邊處理錯誤
+// 當程式遇到未捕捉的異常時就會被觸發，即捕捉同步的程式錯誤
+// 如程式碼錯誤，如呼叫的函式內故意使用未定義的變量就會引發異常
 process.on('uncaughtException', err => {
     // 記錄錯誤下來，等到服務都處理完後，停掉該 process
     console.error('Uncaughted Exception！')
@@ -79,6 +80,7 @@ app.use(function (err, req, res, next) {
         // mongoose 資料辨識錯誤
         err.message = "資料欄位未填寫正確，請重新輸入！";
         err.isOperational = true;
+        err.statusCode = err.statusCode || 400;
         return resErrorProd(err, res)
     }
     // SyntaxError 資料格式錯誤
