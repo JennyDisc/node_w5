@@ -95,8 +95,6 @@ app.use(function (err, req, res, next) {
 
 // node.js 提供的"預期外的錯誤"
 // 如沒有加上 catch 捕捉，錯誤就會觸發、
-// POST 與 PATCH API，body 直接不寫 content、
-// "刪除單筆"、"修改"路徑的 id 數字長度不符規定
 process.on('unhandledRejection', (err, promise) => {
     console.error('未捕捉到的 rejection：', promise, '原因：', err);
 });
